@@ -200,6 +200,40 @@ def priorityScheduling(jobs, original_indices, profits):
                 break
 
     return result
+
+
+# First-Come-First-Serve (FCFS) Scheduling
+# First-Come-First-Serve (FCFS) Scheduling
+# First-Come-First-Serve (FCFS) Scheduling
+def fcfsScheduling(jobs):
+    # Sort jobs by their original order of arrival using a loop
+    for i in range(len(jobs)):
+        for j in range(0, len(jobs) - i - 1):
+            if jobs[j].id > jobs[j + 1].id:
+                # Swap jobs if they are out of order
+                jobs[j], jobs[j + 1] = jobs[j + 1], jobs[j]
+
+    return jobs
+
+# ... (rest of the code)
+
+@app.route('/fcfs', methods=['GET', 'POST'])
+def fcfs():
+    try:
+        jobs = Job.query.all()
+        original_indices = list(range(1, len(jobs) + 1))
+
+        # Sort jobs using FCFS
+        sorted_schedule = fcfsScheduling(jobs)
+
+        return render_template('index.html', sorted_jobs=sorted_schedule, jobs=jobs, original_indices=original_indices)
+
+    except Exception as e:
+        return render_template('error.html', error="An error occurred during sorting: " + str(e))
+
+
+
+
 if __name__ == '__main__':
     create_tables()
     app.run(debug=True)
