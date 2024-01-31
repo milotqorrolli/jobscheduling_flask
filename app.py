@@ -152,12 +152,14 @@ def short_job_first():
 def shortJobScheduling(jobs, original_indices, deadlines, profits):
     N = len(deadlines)
     indices = list(range(N))
-    bubbleSort(indices, lambda a, b: jobs[a].deadline - jobs[b].deadline)
+    
+    # Sort indices based on ascending order of deadlines
+    indices.sort(key=lambda i: deadlines[i])
 
     result = ['-'] * N
 
     for i in range(N):
-        for j in range(min(N, deadlines[indices[i]]) - 1, -1, -1):
+        for j in range(N):
             if result[j] == '-':
                 result[j] = jobs[indices[i]]
                 break
