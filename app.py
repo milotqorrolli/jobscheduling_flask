@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask import render_template
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///jobs.db'
@@ -97,69 +98,106 @@ def sort():
         return render_template('error.html', error="An error occurred during sorting: " + str(e))
 
 
+# MILOTI QKA E KA BO 
+# def greedyJobScheduling(jobs, original_indices, deadlines, profits):
+#     N = len(deadlines)
+#     indices = list(range(N))
+#     bubbleSort(indices, lambda a, b: profits[a] - profits[b])
 
+#     result = ['-'] * N
+
+#     for i in range(N):
+#         for j in range(min(N, deadlines[indices[i]]) - 1, -1, -1):
+#             if result[j] == '-':
+#                 result[j] = jobs[indices[i] - 1]  # Use the original index to get the job from the unsorted list
+#                 break
+
+#     return result
+
+# Liraku:
 def greedyJobScheduling(jobs, original_indices, deadlines, profits):
     N = len(deadlines)
     indices = list(range(N))
-    bubbleSort(indices, lambda a, b: profits[a] - profits[b])
+    bubbleSort(indices, lambda a, b: jobs[a].profit - jobs[b].profit)
 
     result = ['-'] * N
 
     for i in range(N):
         for j in range(min(N, deadlines[indices[i]]) - 1, -1, -1):
             if result[j] == '-':
-                result[j] = jobs[indices[i] - 1]  # Use the original index to get the job from the unsorted list
+                result[j] = jobs[indices[i]]
                 break
 
     return result
 
-
 @app.route('/short_job_first', methods=['GET', 'POST'])
 def short_job_first():
     try:
-        if request.method == 'POST':
-            # Handle POST request logic if needed
-            pass
-
         jobs = Job.query.all()
         original_indices = list(range(1, len(jobs) + 1))  # Original indices starting from 1
         deadlines = [job.deadline for job in jobs]
         profits = [job.profit for job in jobs]
 
-        # Sort jobs by deadline using bubbleSort
-        bubbleSort(original_indices, lambda a, b: deadlines[a - 1] - deadlines[b - 1])
+        sorted_schedule = shortJobScheduling(jobs, original_indices, deadlines, profits)
 
-        # Render the template with the sorted data
-        return render_template('index.html', sorted_jobs=original_indices, jobs=jobs, original_indices=original_indices)
+        # Remove empty slots from the sorted schedule
+        sorted_schedule = [job for job in sorted_schedule if job != '-']
+
+        return render_template('index.html', sorted_jobs=sorted_schedule, jobs=jobs, original_indices=original_indices)
 
     except Exception as e:
-        return render_template('error.html', error='An error occurred during sorting: ' + str(e)), 500
+        return render_template('error.html', error="An error occurred during sorting: " + str(e))
 
+
+def shortJobScheduling(jobs, original_indices, deadlines, profits):
+    N = len(deadlines)
+    indices = list(range(N))
+    bubbleSort(indices, lambda a, b: jobs[a].deadline - jobs[b].deadline)
+
+    result = ['-'] * N
+
+    for i in range(N):
+        for j in range(min(N, deadlines[indices[i]]) - 1, -1, -1):
+            if result[j] == '-':
+                result[j] = jobs[indices[i]]
+                break
+
+    return result
+
+   
 # Define priorityScheduling route
 @app.route('/priority_scheduling', methods=['GET', 'POST'])
 def priority_scheduling():
     try:
-        if request.method == 'POST':
-            # Handle POST request logic if needed
-            pass
-
         jobs = Job.query.all()
-        original_indices = list(range(1, len(jobs) + 1))  # Original indices starting from 1
-        deadlines = [job.deadline for job in jobs]
+        original_indices = list(range(1, len(jobs) + 1))
         profits = [job.profit for job in jobs]
 
-        # Sort jobs by profit using bubbleSort
-        bubbleSort(original_indices, lambda a, b: profits[a - 1] - profits[b - 1])
+        # Sort jobs based on profit in descending order
+        sorted_schedule = priorityScheduling(jobs, original_indices, profits)
 
-        # Render the template with the sorted data
-        return render_template('index.html', sorted_jobs=original_indices, jobs=jobs, original_indices=original_indices)
+        return render_template('index.html', sorted_jobs=sorted_schedule, jobs=jobs, original_indices=original_indices)
 
     except Exception as e:
-        return render_template('error.html', error='An error occurred during sorting: ' + str(e)), 500
+        return render_template('error.html', error="An error occurred during sorting: " + str(e))
 
-# ... (Your existing Flask code)
+
+def priorityScheduling(jobs, original_indices, profits):
+    N = len(profits)
+    indices = list(range(N))
     
+    # Sort indices based on profits in descending order
+    bubbleSort(indices, lambda b, a: jobs[b].profit - jobs[a].profit)
 
+    result = ['-'] * N
+
+    for i in range(N):
+        for j in range(N):
+            if result[j] == '-':
+                result[j] = jobs[indices[i]]
+                break
+
+    return result
 if __name__ == '__main__':
     create_tables()
     app.run(debug=True)
