@@ -202,9 +202,6 @@ def priorityScheduling(jobs, original_indices, profits):
     return result
 
 
-# First-Come-First-Serve (FCFS) Scheduling
-# First-Come-First-Serve (FCFS) Scheduling
-# First-Come-First-Serve (FCFS) Scheduling
 def fcfsScheduling(jobs):
     # Sort jobs by their original order of arrival using a loop
     for i in range(len(jobs)):

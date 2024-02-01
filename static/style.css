@@ -268,3 +268,95 @@ body {
     background-color: black;
     overflow:hidden;
 }
+
+
+  /* responsive*/
+  @media (max-width: 830px) {
+    .child-container {
+      max-width: 80%;
+    }
+  
+    table {
+      font-size: 12px;
+      width: 30%;
+    }
+  
+    .parent-container .div-btn {
+      width: 80%;
+      margin: 0 auto;
+    }
+  
+    .parent-container .div-btn button {
+      padding: 8px 16px;
+    }
+  
+    /* Add more responsive styles as needed */
+  }
+  
+  @media (max-width: 717px) {
+  
+  
+    .parent-container .div-btn  {
+      display: flex;
+      flex-wrap: wrap;
+      
+      
+    }
+    .parent-container .div-btn button {
+      margin-bottom: 5px;
+  
+      padding: 8px 16px;
+      display: flex;
+      flex-wrap: wrap;
+  
+    }
+  }
+  
+  @media (max-width: 400px) {
+    
+  
+   
+    .parent-container .div-btn  {
+      display: flex;
+      flex-wrap: wrap;
+      
+      
+    }
+    .parent-container .div-btn button {
+      margin-bottom: 5px;
+      padding: 4px 10px;
+      font-size: 12px;
+  
+      
+    }
+  } 
+  
+  
+  @media (max-width: 700px) {
+    .container .popup .modal button {
+      font-size: 12px;
+    }
+  
+    .container .popup .modal {
+      font-size: 12px;
+      max-width: 30%;
+    }
+  
+    .container .popup .modal .labels {
+      input {
+        padding: 4px;
+      }
+    }
+  }
+  
+  @media (max-width: 550px) {
+    .container .popup .modal button {
+      font-size: 10px;
+    }
+  
+    .container .popup .modal {
+      font-size: 12px;
+      max-width: 40%;
+    }
+  }
+  
